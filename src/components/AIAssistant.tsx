@@ -1,31 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, X, Send, Hotel, MapPin, Car, UtensilsCrossed, ZoomIn, ZoomOut, Maximize, Minimize } from 'lucide-react';
-import { aiSuggestions, services } from '../data/mockData';
-import { toast } from '@/components/ui/use-toast';
-import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
-interface Message {
-  id: number;
-  text: string;
-  fromUser: boolean;
-  recommendations?: Array<{
-    type: 'hotel' | 'restaurant' | 'transport' | 'ticket';
-    title: string;
-    description: string;
-  }>;
-}
+import { toast } from '@/hooks/use-toast';
+import AIBubble from './ai-assistant/AIBubble';
+import AIPanel from './ai-assistant/AIPanel';
+import AIStyles from './ai-assistant/AIStyles';
+import { Message } from './ai-assistant/AIAssistantTypes';
 
 const AIAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [inputText, setInputText] = useState('');
   const [messages, setMessages] = useState<Message[]>([
     { id: 1, text: "您好！我是美团体育赛事智能助手，有什么可以帮您的吗？", fromUser: false },
   ]);
@@ -45,13 +27,12 @@ const AIAssistant: React.FC = () => {
     return () => clearTimeout(timer);
   }, [isOpen]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = (inputText: string) => {
     if (!inputText.trim()) return;
     
     // Add user message
     const userMessageId = Date.now();
     setMessages([...messages, { id: userMessageId, text: inputText, fromUser: true }]);
-    setInputText('');
     
     // Simulate AI response
     setTimeout(() => {
@@ -147,27 +128,8 @@ const AIAssistant: React.FC = () => {
   };
 
   const handleSuggestionClick = (suggestion: string) => {
-    setInputText(suggestion);
     // Auto-send the suggestion
-    setTimeout(() => {
-      handleSendMessage();
-    }, 100);
-  };
-
-  // Get recommendation icon by type
-  const getRecommendationIcon = (type: string) => {
-    switch(type) {
-      case 'hotel':
-        return <Hotel className="h-4 w-4 text-blue-500" />;
-      case 'restaurant':
-        return <UtensilsCrossed className="h-4 w-4 text-amber-500" />;
-      case 'transport':
-        return <Car className="h-4 w-4 text-green-500" />;
-      case 'ticket':
-        return <MapPin className="h-4 w-4 text-purple-500" />;
-      default:
-        return <MessageSquare className="h-4 w-4" />;
-    }
+    handleSendMessage(suggestion);
   };
 
   // Handle zoom in
@@ -191,240 +153,23 @@ const AIAssistant: React.FC = () => {
 
   return (
     <>
-      {/* AI Assistant Bubble with notification dot */}
-      <button 
-        className="ai-assistant-bubble relative"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="AI助手"
-      >
-        {isOpen ? (
-          <X className="h-6 w-6" />
-        ) : (
-          <>
-            <MessageSquare className="h-6 w-6" />
-            {/* Notification dot */}
-            <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full animate-pulse"></span>
-          </>
-        )}
-      </button>
+      <AIBubble isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
       
-      {/* AI Assistant Panel */}
       {isOpen && (
-        <div className={`ai-assistant-panel ${isExpanded ? 'expanded' : ''} animate-fade-in`}>
-          <div className="bg-gradient-to-r from-meituan-orange to-meituan-blue p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center">
-                  <MessageSquare className="h-5 w-5 text-meituan-orange" />
-                </div>
-                <h3 className="ml-2 font-medium text-white">体育赛事AI助手</h3>
-              </div>
-              <div className="flex items-center space-x-2">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          zoomOut();
-                        }}
-                        className="text-white hover:text-gray-200 p-1"
-                        aria-label="缩小"
-                      >
-                        <ZoomOut className="h-4 w-4" />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>缩小</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          zoomIn();
-                        }}
-                        className="text-white hover:text-gray-200 p-1"
-                        aria-label="放大"
-                      >
-                        <ZoomIn className="h-4 w-4" />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>放大</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleExpanded();
-                        }}
-                        className="text-white hover:text-gray-200 p-1"
-                        aria-label={isExpanded ? "收起" : "展开"}
-                      >
-                        {isExpanded ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{isExpanded ? "收起" : "展开"}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <button 
-                  onClick={() => setIsOpen(false)}
-                  className="text-white hover:text-gray-200 p-1"
-                  aria-label="关闭"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          <ScrollArea className="h-80 overflow-y-auto bg-gray-50">
-            <div className="p-4" style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top left', transition: 'transform 0.2s ease' }}>
-              {messages.map((msg) => (
-                <div 
-                  key={msg.id}
-                  className={`mb-4 ${msg.fromUser ? 'ml-auto' : 'mr-auto'} ${msg.fromUser ? 'max-w-[90%]' : 'max-w-[95%]'}`}
-                >
-                  <div 
-                    className={`p-3 rounded-lg ${
-                      msg.fromUser 
-                        ? 'bg-meituan-blue text-white rounded-br-none' 
-                        : 'bg-white text-gray-700 shadow-sm rounded-bl-none'
-                    }`}
-                  >
-                    {msg.text}
-                    
-                    {/* Show recommendations if available */}
-                    {msg.recommendations && (
-                      <div className="mt-3 space-y-2">
-                        {msg.recommendations.map((rec, idx) => (
-                          <Card key={idx} className="bg-white border-gray-200">
-                            <CardContent className="p-3">
-                              <div className="flex items-center gap-2">
-                                {getRecommendationIcon(rec.type)}
-                                <div>
-                                  <h5 className="text-sm font-medium text-meituan-blue">{rec.title}</h5>
-                                  <p className="text-xs text-gray-500">{rec.description}</p>
-                                </div>
-                              </div>
-                              <div className="flex justify-end mt-2">
-                                <button 
-                                  onClick={() => {
-                                    toast({
-                                      title: "查看详情",
-                                      description: `正在跳转到${rec.title}详情页面`
-                                    });
-                                  }}
-                                  className="text-xs text-meituan-blue hover:underline"
-                                >
-                                  查看详情 →
-                                </button>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-          
-          <div className="p-3 border-t">
-            <h4 className="text-xs text-gray-500 mb-2">快速提问:</h4>
-            <div className="flex flex-wrap gap-2 mb-3">
-              {aiSuggestions.map((suggestion, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleSuggestionClick(suggestion)}
-                  className="text-xs bg-meituan-gray text-meituan-blue px-3 py-1 rounded-full hover:bg-meituan-blue hover:text-white transition-colors"
-                >
-                  {suggestion}
-                </button>
-              ))}
-            </div>
-            
-            <div className="flex items-center">
-              <input
-                type="text"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="输入您的问题..."
-                className="flex-1 border rounded-l-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-meituan-orange"
-              />
-              <button
-                onClick={handleSendMessage}
-                disabled={!inputText.trim()}
-                className="bg-meituan-orange text-white px-4 py-2 rounded-r-lg disabled:opacity-50"
-              >
-                <Send className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        </div>
+        <AIPanel 
+          messages={messages}
+          isExpanded={isExpanded}
+          zoomLevel={zoomLevel}
+          onSendMessage={handleSendMessage}
+          onSuggestionClick={handleSuggestionClick}
+          zoomIn={zoomIn}
+          zoomOut={zoomOut}
+          toggleExpanded={toggleExpanded}
+          onClose={() => setIsOpen(false)}
+        />
       )}
 
-      <style>{`
-        .ai-assistant-bubble {
-          position: fixed;
-          bottom: 20px;
-          right: 20px;
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          background: linear-gradient(45deg, #ff9800, #1eaedb);
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-          z-index: 1000;
-          border: none;
-          cursor: pointer;
-          transition: transform 0.2s;
-        }
-        
-        .ai-assistant-bubble:hover {
-          transform: scale(1.1);
-        }
-        
-        .ai-assistant-panel {
-          position: fixed;
-          bottom: 80px;
-          right: 20px;
-          width: 350px;
-          max-height: 500px;
-          border-radius: 12px;
-          overflow: hidden;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-          z-index: 1000;
-          display: flex;
-          flex-direction: column;
-          background-color: white;
-          transition: all 0.3s ease;
-        }
-
-        .ai-assistant-panel.expanded {
-          width: 450px;
-          max-height: 600px;
-          bottom: 40px;
-        }
-      `}</style>
+      <AIStyles isExpanded={isExpanded} />
     </>
   );
 };
