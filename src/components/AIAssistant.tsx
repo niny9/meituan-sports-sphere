@@ -1,9 +1,16 @@
 
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, X, Send, Hotel, MapPin, Car, UtensilsCrossed } from 'lucide-react';
+import { MessageSquare, X, Send, Hotel, MapPin, Car, UtensilsCrossed, ZoomIn, ZoomOut, Maximize, Minimize } from 'lucide-react';
 import { aiSuggestions, services } from '../data/mockData';
 import { toast } from '@/components/ui/use-toast';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface Message {
   id: number;
@@ -22,6 +29,8 @@ const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     { id: 1, text: "您好！我是美团体育赛事智能助手，有什么可以帮您的吗？", fromUser: false },
   ]);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Automatically pulse notification to engage users
   useEffect(() => {
@@ -161,6 +170,25 @@ const AIAssistant: React.FC = () => {
     }
   };
 
+  // Handle zoom in
+  const zoomIn = () => {
+    if (zoomLevel < 1.5) {
+      setZoomLevel(prevZoom => prevZoom + 0.1);
+    }
+  };
+
+  // Handle zoom out
+  const zoomOut = () => {
+    if (zoomLevel > 0.8) {
+      setZoomLevel(prevZoom => prevZoom - 0.1);
+    }
+  };
+
+  // Toggle expanded view
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
     <>
       {/* AI Assistant Bubble with notification dot */}
@@ -182,7 +210,7 @@ const AIAssistant: React.FC = () => {
       
       {/* AI Assistant Panel */}
       {isOpen && (
-        <div className="ai-assistant-panel animate-fade-in">
+        <div className={`ai-assistant-panel ${isExpanded ? 'expanded' : ''} animate-fade-in`}>
           <div className="bg-gradient-to-r from-meituan-orange to-meituan-blue p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
@@ -191,65 +219,130 @@ const AIAssistant: React.FC = () => {
                 </div>
                 <h3 className="ml-2 font-medium text-white">体育赛事AI助手</h3>
               </div>
-              <button 
-                onClick={() => setIsOpen(false)}
-                className="text-white hover:text-gray-200"
-              >
-                <X className="h-5 w-5" />
-              </button>
+              <div className="flex items-center space-x-2">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          zoomOut();
+                        }}
+                        className="text-white hover:text-gray-200 p-1"
+                        aria-label="缩小"
+                      >
+                        <ZoomOut className="h-4 w-4" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>缩小</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          zoomIn();
+                        }}
+                        className="text-white hover:text-gray-200 p-1"
+                        aria-label="放大"
+                      >
+                        <ZoomIn className="h-4 w-4" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>放大</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleExpanded();
+                        }}
+                        className="text-white hover:text-gray-200 p-1"
+                        aria-label={isExpanded ? "收起" : "展开"}
+                      >
+                        {isExpanded ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{isExpanded ? "收起" : "展开"}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <button 
+                  onClick={() => setIsOpen(false)}
+                  className="text-white hover:text-gray-200 p-1"
+                  aria-label="关闭"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
             </div>
           </div>
           
-          <div className="h-80 overflow-y-auto p-4 bg-gray-50">
-            {messages.map((msg) => (
-              <div 
-                key={msg.id}
-                className={`mb-4 max-w-[90%] ${msg.fromUser ? 'ml-auto' : 'mr-auto'}`}
-              >
+          <ScrollArea className="h-80 overflow-y-auto bg-gray-50">
+            <div className="p-4" style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top left', transition: 'transform 0.2s ease' }}>
+              {messages.map((msg) => (
                 <div 
-                  className={`p-3 rounded-lg ${
-                    msg.fromUser 
-                      ? 'bg-meituan-blue text-white rounded-br-none' 
-                      : 'bg-white text-gray-700 shadow-sm rounded-bl-none'
-                  }`}
+                  key={msg.id}
+                  className={`mb-4 ${msg.fromUser ? 'ml-auto' : 'mr-auto'} ${msg.fromUser ? 'max-w-[90%]' : 'max-w-[95%]'}`}
                 >
-                  {msg.text}
-                  
-                  {/* Show recommendations if available */}
-                  {msg.recommendations && (
-                    <div className="mt-3 space-y-2">
-                      {msg.recommendations.map((rec, idx) => (
-                        <Card key={idx} className="bg-white border-gray-200">
-                          <CardContent className="p-3">
-                            <div className="flex items-center gap-2">
-                              {getRecommendationIcon(rec.type)}
-                              <div>
-                                <h5 className="text-sm font-medium text-meituan-blue">{rec.title}</h5>
-                                <p className="text-xs text-gray-500">{rec.description}</p>
+                  <div 
+                    className={`p-3 rounded-lg ${
+                      msg.fromUser 
+                        ? 'bg-meituan-blue text-white rounded-br-none' 
+                        : 'bg-white text-gray-700 shadow-sm rounded-bl-none'
+                    }`}
+                  >
+                    {msg.text}
+                    
+                    {/* Show recommendations if available */}
+                    {msg.recommendations && (
+                      <div className="mt-3 space-y-2">
+                        {msg.recommendations.map((rec, idx) => (
+                          <Card key={idx} className="bg-white border-gray-200">
+                            <CardContent className="p-3">
+                              <div className="flex items-center gap-2">
+                                {getRecommendationIcon(rec.type)}
+                                <div>
+                                  <h5 className="text-sm font-medium text-meituan-blue">{rec.title}</h5>
+                                  <p className="text-xs text-gray-500">{rec.description}</p>
+                                </div>
                               </div>
-                            </div>
-                            <div className="flex justify-end mt-2">
-                              <button 
-                                onClick={() => {
-                                  toast({
-                                    title: "查看详情",
-                                    description: `正在跳转到${rec.title}详情页面`
-                                  });
-                                }}
-                                className="text-xs text-meituan-blue hover:underline"
-                              >
-                                查看详情 →
-                              </button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
+                              <div className="flex justify-end mt-2">
+                                <button 
+                                  onClick={() => {
+                                    toast({
+                                      title: "查看详情",
+                                      description: `正在跳转到${rec.title}详情页面`
+                                    });
+                                  }}
+                                  className="text-xs text-meituan-blue hover:underline"
+                                >
+                                  查看详情 →
+                                </button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </ScrollArea>
           
           <div className="p-3 border-t">
             <h4 className="text-xs text-gray-500 mb-2">快速提问:</h4>
@@ -323,6 +416,13 @@ const AIAssistant: React.FC = () => {
           display: flex;
           flex-direction: column;
           background-color: white;
+          transition: all 0.3s ease;
+        }
+
+        .ai-assistant-panel.expanded {
+          width: 450px;
+          max-height: 600px;
+          bottom: 40px;
         }
       `}</style>
     </>
