@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, X, Send, Hotel, MapPin, Car, Restaurant } from 'lucide-react';
+import { MessageSquare, X, Send, Hotel, MapPin, Car, UtensilsCrossed } from 'lucide-react';
 import { aiSuggestions, services } from '../data/mockData';
 import { toast } from '@/components/ui/use-toast';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
@@ -151,7 +151,7 @@ const AIAssistant: React.FC = () => {
       case 'hotel':
         return <Hotel className="h-4 w-4 text-blue-500" />;
       case 'restaurant':
-        return <Restaurant className="h-4 w-4 text-amber-500" />;
+        return <UtensilsCrossed className="h-4 w-4 text-amber-500" />;
       case 'transport':
         return <Car className="h-4 w-4 text-green-500" />;
       case 'ticket':
@@ -286,7 +286,7 @@ const AIAssistant: React.FC = () => {
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .ai-assistant-bubble {
           position: fixed;
           bottom: 20px;

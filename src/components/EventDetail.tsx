@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Event, Service, services } from '../data/mockData';
-import { Calendar, ChevronLeft, MapPin, Share2, Star, Users, Hotel, Restaurant, Car, Ticket, Clock } from 'lucide-react';
+import { Calendar, ChevronLeft, MapPin, Share2, Star, Users, Hotel, UtensilsCrossed, Car, Ticket, Clock } from 'lucide-react';
 import ServiceRecommendation from './ServiceRecommendation';
 import { toast } from '@/components/ui/use-toast';
 import { Card, CardContent } from '@/components/ui/card';
@@ -26,7 +25,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
 
   // Service type to display name and icon
   const serviceTypeLabels: Record<string, {name: string, icon: React.ReactNode}> = {
-    food: { name: '餐饮推荐', icon: <Restaurant className="h-5 w-5" /> },
+    food: { name: '餐饮推荐', icon: <UtensilsCrossed className="h-5 w-5" /> },
     accommodation: { name: '住宿推荐', icon: <Hotel className="h-5 w-5" /> },
     transportation: { name: '交通方案', icon: <Car className="h-5 w-5" /> },
     entertainment: { name: '娱乐活动', icon: <Ticket className="h-5 w-5" /> }
@@ -260,7 +259,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
               <h3 className="font-medium text-meituan-blue mb-3">赛前准备 (赛事前3天)</h3>
               <div className="space-y-3">
                 <div className="flex items-center">
-                  <Restaurant className="h-4 w-4 text-meituan-orange mr-2" />
+                  <UtensilsCrossed className="h-4 w-4 text-meituan-orange mr-2" />
                   <span className="text-sm">参赛者能量餐 - 提前预订</span>
                 </div>
                 <div className="flex items-center">
@@ -296,7 +295,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
               <h3 className="font-medium text-meituan-blue mb-3">赛后服务</h3>
               <div className="space-y-3">
                 <div className="flex items-center">
-                  <Restaurant className="h-4 w-4 text-green-500 mr-2" />
+                  <UtensilsCrossed className="h-4 w-4 text-green-500 mr-2" />
                   <span className="text-sm">赛后恢复餐 - 参赛者专享</span>
                 </div>
                 <div className="flex items-center">
