@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { aiSuggestions } from '../../data/mockData';
+import { aiSuggestions } from '../../data';
 
 interface AISuggestionsProps {
   onSuggestionClick: (suggestion: string) => void;
