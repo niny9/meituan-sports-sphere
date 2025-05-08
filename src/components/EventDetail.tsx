@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Event, Service, services } from '../data/mockData';
 import { Calendar, ChevronLeft, MapPin, Share2, Star, Users, Hotel, UtensilsCrossed, Car, Ticket, Clock } from 'lucide-react';
@@ -51,7 +52,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
       <div className="relative">
         <div className="h-64 overflow-hidden">
           <img 
-            src={event.imageUrl} 
+            src={event.image} 
             alt={event.title} 
             className="w-full h-full object-cover"
           />

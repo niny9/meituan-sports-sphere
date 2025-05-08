@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Calendar, MapPin } from 'lucide-react';
 import { Event } from '../data/mockData';
@@ -32,7 +31,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
     >
       <div className="relative">
         <img 
-          src={event.imageUrl} 
+          src={event.image} 
           alt={event.title} 
           className="w-full h-48 object-cover"
         />
