@@ -18,6 +18,13 @@ const Navbar: React.FC = () => {
     }
   };
 
+  const handleMenuClick = (menuId: string) => {
+    setActiveMenu(menuId);
+    // Navigate to the appropriate route based on menu ID
+    navigate(`/?tab=${menuId}`);
+    console.log("Navigation clicked:", menuId);
+  };
+
   return (
     <div className="sticky top-0 z-40 w-full bg-white shadow-sm">
       <div className="container mx-auto px-4 sm:px-6">
@@ -34,7 +41,7 @@ const Navbar: React.FC = () => {
             {naviMenuItems.map((item) => (
               <button
                 key={item.id}
-                onClick={() => setActiveMenu(item.id)}
+                onClick={() => handleMenuClick(item.id)}
                 className={`flex items-center space-x-1 px-1 py-2 text-sm font-medium transition-colors
                   ${activeMenu === item.id 
                     ? 'text-meituan-orange border-b-2 border-meituan-orange' 
