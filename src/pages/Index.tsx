@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import EventCard from '@/components/EventCard';
-import { events, Event, intentCategories } from '@/data/mockData';
+import { events, Event, intentCategories } from '@/data';
 import AIAssistant from '@/components/AIAssistant';
 import EventDetail from '@/components/EventDetail';
 import { MapPin, Calendar, Star, Users } from 'lucide-react';

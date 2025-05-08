@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Service } from '../data/mockData';
+import { Service } from '../data';
 import { Star, ArrowRight, MapPin, Clock } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 

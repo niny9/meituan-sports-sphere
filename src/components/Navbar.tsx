@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
-import { naviMenuItems } from '../data/mockData';
+import { naviMenuItems } from '../data';
 import { useNavigate } from 'react-router-dom';
 
 const Navbar: React.FC = () => {

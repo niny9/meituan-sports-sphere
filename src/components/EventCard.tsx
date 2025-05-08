@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Calendar, MapPin } from 'lucide-react';
-import { Event } from '../data/mockData';
+import { Event } from '../data';
 import { formatDistance } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 

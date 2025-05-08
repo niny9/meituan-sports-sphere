@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Event, Service, services } from '../data/mockData';
+import { Event, Service, services } from '../data';
 import { Calendar, ChevronLeft, MapPin, Share2, Star, Users, Hotel, UtensilsCrossed, Car, Ticket, Clock } from 'lucide-react';
 import ServiceRecommendation from './ServiceRecommendation';
 import { toast } from '@/components/ui/use-toast';

@@ -1,0 +1,95 @@
+
+import { Event } from "./types";
+
+export const events: Event[] = [
+  {
+    id: '1',
+    title: '北京国际马拉松',
+    category: '马拉松',
+    date: '2025-09-15',
+    location: '北京市天安门广场',
+    image: 'https://picsum.photos/id/1081/600/400',
+    description: '北京国际马拉松是中国最具影响力的马拉松赛事之一，路线经过天安门、故宫等北京地标建筑。',
+    popularity: 95,
+    intentScore: 85,
+    latitude: 39.9042,
+    longitude: 116.4074,
+    nearbyServices: true,
+    tags: ['推荐', '马拉松', '国际赛事']
+  },
+  {
+    id: '2',
+    title: 'CBA 北京首钢 vs 广东宏远',
+    category: '篮球',
+    date: '2025-06-10',
+    location: '北京五棵松体育馆',
+    image: 'https://picsum.photos/id/1071/600/400',
+    description: 'CBA联赛强队对决，北京首钢主场迎战卫冕冠军广东宏远。',
+    popularity: 88,
+    intentScore: 70,
+    latitude: 39.9125,
+    longitude: 116.2747,
+    nearbyServices: true,
+    tags: ['篮球', 'CBA', '对决']
+  },
+  {
+    id: '3',
+    title: '中超联赛：北京国安 vs 上海申花',
+    category: '足球',
+    date: '2025-07-20',
+    location: '北京工人体育场',
+    image: 'https://picsum.photos/id/1084/600/400',
+    description: '中超联赛焦点战，北京国安对阵上海申花，两支老牌劲旅的对决。',
+    popularity: 82,
+    intentScore: 75,
+    latitude: 39.9339,
+    longitude: 116.4452,
+    nearbyServices: true,
+    tags: ['推荐', '足球', '中超']
+  },
+  {
+    id: '4',
+    title: '杭州亚运会',
+    category: '综合运动会',
+    date: '2025-08-05',
+    location: '杭州奥体中心',
+    image: 'https://picsum.photos/id/1067/600/400',
+    description: '第20届亚洲运动会，汇集亚洲各国顶尖运动员的综合性体育盛会。',
+    popularity: 90,
+    intentScore: 60,
+    latitude: 30.2741,
+    longitude: 120.1551,
+    nearbyServices: true,
+    tags: ['亚运会', '综合赛事', '国际赛事']
+  },
+  {
+    id: '5',
+    title: 'ATP中国网球公开赛',
+    category: '网球',
+    date: '2025-10-03',
+    location: '国家网球中心',
+    image: 'https://picsum.photos/id/1072/600/400',
+    description: 'ATP巡回赛中国站，世界顶级网球选手争夺中国公开赛冠军。',
+    popularity: 75,
+    intentScore: 65,
+    latitude: 39.9917,
+    longitude: 116.3935,
+    nearbyServices: false,
+    tags: ['网球', 'ATP', '国际赛事']
+  },
+  {
+    id: '6',
+    title: '环海南岛自行车赛',
+    category: '自行车',
+    date: '2025-11-25',
+    location: '海南省环岛赛道',
+    image: 'https://picsum.photos/id/1076/600/400',
+    description: '中国最具影响力的公路自行车赛事，选手将环绕美丽的海南岛进行比赛。',
+    popularity: 70,
+    intentScore: 55,
+    latitude: 20.0200,
+    longitude: 110.3456,
+    nearbyServices: false,
+    tags: ['推荐', '自行车', '环岛赛']
+  }
+];
