@@ -7,7 +7,8 @@ interface AIStylesProps {
 
 const AIStyles: React.FC<AIStylesProps> = ({ isExpanded }) => {
   return (
-    <style jsx="true">{`
+    <style>
+      {`
       .ai-assistant-bubble {
         position: fixed;
         bottom: 20px;
@@ -52,7 +53,8 @@ const AIStyles: React.FC<AIStylesProps> = ({ isExpanded }) => {
         max-height: 600px;
         bottom: 40px;
       }
-    `}</style>
+      `}
+    </style>
   );
 };
 
