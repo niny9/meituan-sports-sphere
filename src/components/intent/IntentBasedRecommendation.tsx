@@ -35,18 +35,21 @@ const IntentBasedRecommendation: React.FC<IntentBasedRecommendationProps> = ({ i
   };
 
   const getRelevantServices = (): Service[] => {
+    // Get all services by flattening the services object values
+    const allServices = Object.values(services).flat();
+    
     switch (intentLevel) {
       case 'high':
         // High intent users get registration services, accommodations
-        return services.filter(s => ['accommodation', 'transportation'].includes(s.type)).slice(0, 2);
+        return allServices.filter(s => ['accommodation', 'transportation'].includes(s.type)).slice(0, 2);
       case 'medium':
         // Medium intent users get equipment rentals, guides
-        return services.filter(s => ['entertainment'].includes(s.type)).slice(0, 2);
+        return allServices.filter(s => ['entertainment'].includes(s.type)).slice(0, 2);
       case 'low':
         // Low intent users get introductory information
-        return services.filter(s => ['food'].includes(s.type)).slice(0, 2);
+        return allServices.filter(s => ['food'].includes(s.type)).slice(0, 2);
       default:
-        return services.slice(0, 2);
+        return allServices.slice(0, 2);
     }
   };
 
