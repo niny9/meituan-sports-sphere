@@ -29,7 +29,7 @@ const Index = () => {
     if (searchQuery) {
       return event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
              event.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-             event.description.toLowerCase().includes(searchQuery.toLowerCase());
+             (event.description && event.description.toLowerCase().includes(searchQuery.toLowerCase()));
     }
     
     return true;
@@ -43,7 +43,7 @@ const Index = () => {
   // Mock data for the new sections
   const nearbyEvents = events.slice(0, 3);
   const popularEvents = [...events].sort((a, b) => b.intentScore - a.intentScore).slice(0, 4);
-  const recommendedEvents = events.filter(e => e.tags.includes("推荐")).slice(0, 3);
+  const recommendedEvents = events.filter(e => e.tags && e.tags.includes("推荐")).slice(0, 3);
   
   const sportsCommunities = [
     { id: 1, name: "北京跑步俱乐部", members: 1289, image: "https://picsum.photos/id/26/300/200" },
