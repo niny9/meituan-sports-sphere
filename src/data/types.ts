@@ -44,3 +44,22 @@ export interface NaviMenuItem {
   icon: LucideIcon;
   features: string[];
 }
+
+export type IntentLevel = 'high' | 'medium' | 'low' | null;
+
+export interface UserProfile {
+  id?: string;
+  intentLevel: IntentLevel;
+  lastQuizDate?: Date;
+  searchHistory?: string[];
+  viewedEvents?: string[];
+}
+
+export interface IntentQuestion {
+  id: number;
+  text: string;
+  options: {
+    text: string;
+    value: 'high' | 'medium' | 'low';
+  }[];
+}

@@ -7,8 +7,11 @@ import { events, Event, intentCategories } from '@/data';
 import AIAssistant from '@/components/AIAssistant';
 import EventDetail from '@/components/EventDetail';
 import { MapPin, Calendar, Star, Users } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useUserProfile } from '@/contexts/UserProfileContext';
+import IntentQuizModal from '@/components/intent/IntentQuizModal';
+import IntentBasedRecommendation from '@/components/intent/IntentBasedRecommendation';
 
 const Index = () => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -16,7 +19,9 @@ const Index = () => {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('search');
   const activeTab = searchParams.get('tab') || 'events';
+  const [quizModalOpen, setQuizModalOpen] = useState(false);
   const { toast } = useToast();
+  const { userProfile, isNewUser } = useUserProfile();
 
   // Filter events based on selected category and search query
   const filteredEvents = events.filter(event => {
@@ -41,6 +46,26 @@ const Index = () => {
     setSelectedEvent(event);
     window.scrollTo(0, 0);
   };
+
+  const handleExploreClick = () => {
+    if (isNewUser) {
+      // Show intent quiz for new users
+      setQuizModalOpen(true);
+    } else {
+      // Directly scroll to recommendations for returning users
+      document.getElementById('recommendations')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Show initial notification
+  useEffect(() => {
+    setTimeout(() => {
+      toast({
+        title: "体育赛事推荐",
+        description: "北京国际马拉松赛事报名即将截止，点击查看详情",
+      });
+    }, 2000);
+  }, [toast]);
 
   // Mock data for the different tabs
   const nearbyEvents = events.slice(0, 3);
@@ -91,12 +116,25 @@ const Index = () => {
                     <p className="mb-4">
                       基于AI技术，为您精准匹配赛事与周边服务，打造完美赛事体验
                     </p>
-                    <button className="px-5 py-2 bg-meituan-orange text-white rounded-full hover:bg-opacity-90 transition">
+                    <button 
+                      onClick={handleExploreClick}
+                      className="px-5 py-2 bg-meituan-orange text-white rounded-full hover:bg-opacity-90 transition"
+                    >
                       探索赛事
                     </button>
                   </div>
                 </div>
               </div>
+            </section>
+            
+            {/* Intent-based recommendations section */}
+            <section id="recommendations" className="mb-10">
+              {userProfile.intentLevel && (
+                <IntentBasedRecommendation 
+                  intentLevel={userProfile.intentLevel} 
+                  onEventClick={handleEventClick} 
+                />
+              )}
             </section>
             
             {/* Tabs content based on navigation selection */}
@@ -450,13 +488,23 @@ const Index = () => {
                 </section>
               </TabsContent>
             </Tabs>
-            
-            {/* We've removed the individual sections that were previously here, as they're now part of the TabsContent components above */}
           </>
         )}
       </main>
       
       <AIAssistant />
+      
+      {/* Intent Quiz Modal */}
+      <IntentQuizModal
+        open={quizModalOpen}
+        onOpenChange={setQuizModalOpen}
+        onComplete={() => {
+          // Scroll to recommendations after completing the quiz
+          setTimeout(() => {
+            document.getElementById('recommendations')?.scrollIntoView({ behavior: 'smooth' });
+          }, 500);
+        }}
+      />
     </div>
   );
 };

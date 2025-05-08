@@ -6,3 +6,4 @@ export * from './servicesData';
 export * from './intentCategoriesData';
 export * from './navigationData';
 export * from './aiSuggestionsData';
+export * from './intentQuestionsData';
