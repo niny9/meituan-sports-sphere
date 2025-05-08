@@ -2,9 +2,21 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import { naviMenuItems } from '../data/mockData';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState('events');
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      console.log("Searching for:", searchQuery);
+      // Navigate to search results or filter the current page
+      navigate(`/?search=${encodeURIComponent(searchQuery)}`);
+    }
+  };
 
   return (
     <div className="sticky top-0 z-40 w-full bg-white shadow-sm">
@@ -35,16 +47,18 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <div className="relative rounded-md shadow-sm">
+            <form onSubmit={handleSearch} className="relative rounded-md shadow-sm">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <Search className="h-4 w-4 text-gray-400" />
               </div>
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="block w-full rounded-md border-0 bg-meituan-gray py-1.5 pl-10 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-meituan-orange sm:text-sm sm:leading-6"
                 placeholder="搜索赛事"
               />
-            </div>
+            </form>
             <button className="rounded-full bg-meituan-gray p-2">
               <span className="sr-only">用户菜单</span>
               <div className="h-6 w-6 rounded-full bg-meituan-blue flex items-center justify-center text-white font-medium">
