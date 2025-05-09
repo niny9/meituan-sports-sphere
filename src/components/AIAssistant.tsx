@@ -1,10 +1,15 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from '@/hooks/use-toast';
 import AIBubble from './ai-assistant/AIBubble';
 import AIPanel from './ai-assistant/AIPanel';
 import AIStyles from './ai-assistant/AIStyles';
 import { Message, Recommendation } from './ai-assistant/AIAssistantTypes';
+
+// Define Web Speech API types
+interface Window {
+  SpeechRecognition: any;
+  webkitSpeechRecognition: any;
+}
 
 const AIAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,12 +21,12 @@ const AIAssistant: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
   
   // Web Speech API recognition
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   
   // Initialize speech recognition
   useEffect(() => {
     // Check if browser supports speech recognition
-    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     
     if (SpeechRecognition) {
       recognitionRef.current = new SpeechRecognition();
@@ -30,13 +35,13 @@ const AIAssistant: React.FC = () => {
       recognitionRef.current.interimResults = false;
       recognitionRef.current.maxAlternatives = 1;
       
-      recognitionRef.current.onresult = (event: any) => {
+      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
         const transcript = event.results[0][0].transcript;
         handleSendMessage(transcript);
         setIsListening(false);
       };
       
-      recognitionRef.current.onerror = (event: any) => {
+      recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
         console.error('Speech recognition error', event.error);
         setIsListening(false);
         

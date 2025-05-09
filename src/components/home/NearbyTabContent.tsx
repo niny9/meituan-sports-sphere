@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { MapPin, Navigation, Coffee, Parking } from 'lucide-react';
+import { MapPin, Navigation, Coffee, Car } from 'lucide-react';
 import { Event } from '@/data/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -186,7 +186,7 @@ const NearbyTabContent: React.FC<NearbyTabContentProps> = ({ nearbyEvents, handl
                 <div className="grid grid-cols-2 gap-2">
                   {selectedVenue?.facilities?.map((facility, idx) => (
                     <div key={idx} className="flex items-center p-2 bg-gray-50 rounded">
-                      {facility.includes('停车') && <Parking className="h-4 w-4 mr-2 text-meituan-blue" />}
+                      {facility.includes('停车') && <Car className="h-4 w-4 mr-2 text-meituan-blue" />}
                       {facility.includes('餐') && <Coffee className="h-4 w-4 mr-2 text-meituan-blue" />}
                       {!facility.includes('停车') && !facility.includes('餐') && (
                         <div className="w-4 h-4 rounded-full bg-meituan-blue/20 mr-2" />
