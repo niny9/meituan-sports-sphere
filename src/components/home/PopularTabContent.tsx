@@ -19,13 +19,13 @@ const PopularTabContent: React.FC<PopularTabContentProps> = ({ popularEvents, ha
   return (
     <section id="popular-section">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-meituan-blue flex items-center">
+        <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FFD256] to-[#FFB838] flex items-center">
           <Star className="h-5 w-5 mr-2 text-[#FFD256]" />
           热门推荐
         </h2>
         <Button 
           variant="ghost" 
-          className="text-sm text-meituan-blue hover:bg-meituan-blue/10 flex items-center gap-1"
+          className="text-sm text-[#FFD256] hover:bg-[#FFD256]/10 flex items-center gap-1"
           onClick={() => setShowAllEvents(!showAllEvents)}
         >
           {showAllEvents ? '收起' : '查看全部'}
@@ -108,7 +108,7 @@ const PopularTabContent: React.FC<PopularTabContentProps> = ({ popularEvents, ha
               <div className="mt-3 flex justify-between items-center">
                 <div className="flex flex-wrap gap-1">
                   {event.tags?.slice(0, 2).map(tag => (
-                    <span key={tag} className="bg-meituan-gray text-meituan-blue px-2 py-0.5 rounded-full text-xs">
+                    <span key={tag} className="bg-meituan-gray text-[#FFD256] px-2 py-0.5 rounded-full text-xs">
                       {tag}
                     </span>
                   ))}

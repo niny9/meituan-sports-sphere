@@ -42,8 +42,8 @@ const Navbar: React.FC = () => {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <div className="mr-4 flex">
-              <span className="font-bold text-xl text-meituan-blue cursor-pointer" onClick={() => navigate('/')}>
-                <span className="text-[#FFD256]">美团</span>体育赛事
+              <span className="font-bold text-xl cursor-pointer" onClick={() => navigate('/')}>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FFD256] to-[#FFB838]">嗨赛智荐</span>
               </span>
             </div>
           </div>

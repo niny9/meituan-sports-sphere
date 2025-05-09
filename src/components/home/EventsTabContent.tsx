@@ -24,7 +24,7 @@ const EventsTabContent: React.FC<EventsTabContentProps> = ({
     <>
       {/* User intent categories with improved visuals */}
       <section className="mb-8">
-        <h2 className="text-xl font-bold mb-4 text-meituan-blue">发现赛事</h2>
+        <h2 className="text-xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#FFD256] to-[#FFB838]">猜你想去</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {intentCategories.map((category) => (
             <button
@@ -65,9 +65,9 @@ const EventsTabContent: React.FC<EventsTabContentProps> = ({
       {/* Events list with improved visual design */}
       <section>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-meituan-blue">
+          <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FFD256] to-[#FFB838]">
             {searchQuery ? `"${searchQuery}"的搜索结果` : 
-            selectedCategory ? `${intentCategories.find(c => c.id === selectedCategory)?.name || ''}赛事推荐` : '全部赛事'}
+            selectedCategory ? `${intentCategories.find(c => c.id === selectedCategory)?.name || ''}赛事推荐` : '精选赛事'}
           </h2>
           {(selectedCategory || searchQuery) && (
             <button 
@@ -107,7 +107,7 @@ const EventsTabContent: React.FC<EventsTabContentProps> = ({
       {!selectedCategory && !searchQuery && filteredEvents.length > 0 && (
         <section className="mt-12">
           <div className="bg-gradient-to-r from-[#FFD256]/10 to-[#FFB838]/10 p-5 rounded-xl border border-[#FFD256]/20">
-            <h3 className="font-bold mb-3 text-meituan-blue">赛事智能匹配</h3>
+            <h3 className="font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-[#FFD256] to-[#FFB838]">赛事智能匹配</h3>
             <p className="text-sm text-gray-600 mb-3">
               根据您的浏览习惯和兴趣，系统智能匹配以下赛事
             </p>
