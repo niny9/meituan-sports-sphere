@@ -3,6 +3,7 @@ import React from 'react';
 import EventCard from '../EventCard';
 import { Event } from '@/data/types';
 import { intentCategories } from '@/data';
+import { Card, CardContent } from "@/components/ui/card";
 
 interface EventsTabContentProps {
   selectedCategory: string | null;
@@ -21,9 +22,9 @@ const EventsTabContent: React.FC<EventsTabContentProps> = ({
 }) => {
   return (
     <>
-      {/* User intent categories */}
+      {/* User intent categories with improved visuals */}
       <section className="mb-8">
-        <h2 className="text-xl font-bold mb-4 text-meituan-blue">智能匹配推荐</h2>
+        <h2 className="text-xl font-bold mb-4 text-meituan-blue">发现赛事</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {intentCategories.map((category) => (
             <button
@@ -31,8 +32,8 @@ const EventsTabContent: React.FC<EventsTabContentProps> = ({
               onClick={() => setSelectedCategory(selectedCategory === category.id ? null : category.id)}
               className={`p-4 rounded-lg flex items-center transition-all ${
                 selectedCategory === category.id
-                  ? 'bg-meituan-blue text-white shadow-lg'
-                  : 'bg-white text-meituan-darkGray hover:bg-meituan-blue/10'
+                  ? 'bg-gradient-to-r from-[#FFD256] to-[#FFB838] text-white shadow-lg'
+                  : 'bg-white text-meituan-darkGray hover:bg-[#FFD256]/10'
               }`}
             >
               <div className={`p-2 rounded-full ${
@@ -43,7 +44,7 @@ const EventsTabContent: React.FC<EventsTabContentProps> = ({
                 <category.icon className={`h-5 w-5 ${
                   selectedCategory === category.id
                     ? 'text-white'
-                    : 'text-meituan-blue'
+                    : 'text-[#FFD256]'
                 }`} />
               </div>
               <div className="ml-3 text-left">
@@ -61,7 +62,7 @@ const EventsTabContent: React.FC<EventsTabContentProps> = ({
         </div>
       </section>
       
-      {/* Events list */}
+      {/* Events list with improved visual design */}
       <section>
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-meituan-blue">
@@ -72,9 +73,11 @@ const EventsTabContent: React.FC<EventsTabContentProps> = ({
             <button 
               onClick={() => {
                 setSelectedCategory(null);
-                window.history.pushState({}, "", window.location.pathname);
+                // Clear search params from URL
+                const urlWithoutParams = window.location.pathname;
+                window.history.pushState({}, "", urlWithoutParams);
               }}
-              className="text-sm text-meituan-blue hover:underline"
+              className="text-sm text-[#FFD256] hover:underline flex items-center"
             >
               查看全部
             </button>
@@ -82,9 +85,11 @@ const EventsTabContent: React.FC<EventsTabContentProps> = ({
         </div>
         
         {filteredEvents.length === 0 ? (
-          <div className="bg-white rounded-lg p-8 text-center">
-            <p className="text-gray-500">没有匹配的赛事，请调整筛选条件</p>
-          </div>
+          <Card className="p-8 text-center">
+            <CardContent className="pt-6">
+              <p className="text-gray-500">没有匹配的赛事，请调整筛选条件</p>
+            </CardContent>
+          </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredEvents.map(event => (
@@ -97,6 +102,44 @@ const EventsTabContent: React.FC<EventsTabContentProps> = ({
           </div>
         )}
       </section>
+      
+      {/* AI-driven personalized suggestions */}
+      {!selectedCategory && !searchQuery && filteredEvents.length > 0 && (
+        <section className="mt-12">
+          <div className="bg-gradient-to-r from-[#FFD256]/10 to-[#FFB838]/10 p-5 rounded-xl border border-[#FFD256]/20">
+            <h3 className="font-bold mb-3 text-meituan-blue">赛事智能匹配</h3>
+            <p className="text-sm text-gray-600 mb-3">
+              根据您的浏览习惯和兴趣，系统智能匹配以下赛事
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {filteredEvents.slice(0, 2).map(event => (
+                <div 
+                  key={`suggestion-${event.id}`}
+                  onClick={() => handleEventClick(event)}
+                  className="flex bg-white rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow"
+                >
+                  <img 
+                    src={event.image}
+                    alt={event.title}
+                    className="w-16 h-16 object-cover rounded-md mr-3" 
+                  />
+                  <div>
+                    <h4 className="font-medium text-sm">{event.title}</h4>
+                    <p className="text-xs text-gray-500 mt-1">{event.date}</p>
+                    <div className="flex gap-1 mt-1">
+                      {event.tags?.slice(0, 1).map(tag => (
+                        <span key={tag} className="bg-[#FFD256]/10 text-[#FFD256] px-2 py-0.5 rounded text-xs">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </>
   );
 };

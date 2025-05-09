@@ -109,7 +109,7 @@ const AIAssistant: React.FC = () => {
       if (inputText.includes('住宿') || inputText.includes('酒店')) {
         setMessages(prev => [...prev, { 
           id: userMessageId + 1, 
-          text: "根据您的需求，我为您���到了赛事附近的优质酒店推荐：", 
+          text: "根据您的需求，我为您找到了赛事附近的优质酒店推荐：", 
           fromUser: false,
           recommendations: [
             {

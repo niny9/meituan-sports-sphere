@@ -1,13 +1,24 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, ArrowRight, Flame } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface HeroSectionProps {
   handleExploreClick: () => void;
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({ handleExploreClick }) => {
+  const navigate = useNavigate();
+  
+  const handleHotEventsClick = () => {
+    navigate('/?tab=popular');
+    // Scroll to popular section
+    setTimeout(() => {
+      document.getElementById('popular-section')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
   return (
     <section className="mb-10">
       <div className="relative rounded-2xl overflow-hidden">
@@ -39,51 +50,66 @@ const HeroSection: React.FC<HeroSectionProps> = ({ handleExploreClick }) => {
             <div className="flex flex-col sm:flex-row gap-3 animate-fade-in">
               <Button 
                 onClick={handleExploreClick}
-                className="bg-meituan-orange text-white hover:bg-meituan-orange/90 transition flex items-center gap-1"
+                className="bg-[#FFD256] text-meituan-darkGray hover:bg-[#FFB838] transition flex items-center gap-1"
                 size="lg"
               >
                 探索赛事
                 <ChevronRight className="h-4 w-4" />
               </Button>
               <Button 
+                onClick={handleHotEventsClick}
                 variant="outline"
-                className="border-white text-white hover:bg-white/10"
+                className="border-white text-white hover:bg-white/10 flex items-center gap-1"
               >
                 查看热门
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
           </div>
           
-          {/* Floating event cards */}
+          {/* Floating event cards with updated gradient */}
           <div className="hidden lg:block absolute right-8 top-1/2 -translate-y-1/2 space-y-4">
-            <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-lg w-64 transform hover:scale-105 transition-transform">
+            <div className="bg-gradient-to-r from-[#FFD256] to-[#FFB838] backdrop-blur-sm rounded-lg p-4 shadow-lg w-64 transform hover:scale-105 hover:-translate-y-1 transition-all">
               <div className="flex gap-3 items-center">
-                <div className="w-12 h-12 bg-meituan-orange/10 rounded-full flex items-center justify-center">
-                  <span className="text-meituan-orange font-bold">9月</span>
+                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold">9月</span>
                 </div>
                 <div>
-                  <h3 className="font-bold text-meituan-blue">北京国际马拉松</h3>
-                  <p className="text-xs text-gray-500">报名截止：还剩3天</p>
+                  <h3 className="font-bold text-white">北京国际马拉松</h3>
+                  <p className="text-xs text-white/80">报名截止：还剩3天</p>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-lg w-64 transform translate-x-8">
+            <div className="bg-gradient-to-r from-[#FFD256] to-[#FFB838] backdrop-blur-sm rounded-lg p-4 shadow-lg w-64 transform translate-x-8 hover:scale-105 hover:-translate-y-1 transition-all">
               <div className="flex gap-3 items-center">
-                <div className="w-12 h-12 bg-meituan-blue/10 rounded-full flex items-center justify-center">
-                  <span className="text-meituan-blue font-bold">10月</span>
+                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold">10月</span>
                 </div>
                 <div>
-                  <h3 className="font-bold text-meituan-blue">城市定向挑战赛</h3>
-                  <p className="text-xs text-gray-500">名额有限，抢先报名</p>
+                  <h3 className="font-bold text-white">城市定向挑战赛</h3>
+                  <p className="text-xs text-white/80">名额有限，抢先报名</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
         
-        {/* Additional decoration elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-meituan-orange opacity-10 rounded-full blur-3xl"></div>
+        {/* Updated decoration elements */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#FFB838] opacity-10 rounded-full blur-3xl"></div>
+      </div>
+      
+      {/* Hot events promotion card with gradient */}
+      <div className="mt-6 bg-gradient-to-r from-[#FFD256] to-[#FFB838] rounded-xl p-5 shadow-lg transform transition-transform hover:-translate-y-1 cursor-pointer" onClick={handleHotEventsClick}>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Flame className="h-5 w-5 text-white" />
+            <h3 className="font-bold text-white text-lg">今日热门赛事精选</h3>
+          </div>
+          <Button variant="ghost" className="p-2 h-auto text-white hover:bg-white/20 rounded-full">
+            <ArrowRight className="h-5 w-5" />
+          </Button>
+        </div>
       </div>
       
       {/* Quick stats below hero */}
