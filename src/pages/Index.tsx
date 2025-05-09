@@ -1,10 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import EventCard from '@/components/EventCard';
 import { events, Event, intentCategories } from '@/data';
 import AIAssistant from '@/components/AIAssistant';
-import EventDetail from '@/components/EventDetail';
+import EventDetail from '@/components/event-detail/EventDetail';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUserProfile } from '@/contexts/UserProfileContext';
