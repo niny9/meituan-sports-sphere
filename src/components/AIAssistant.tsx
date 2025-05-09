@@ -4,12 +4,8 @@ import AIBubble from './ai-assistant/AIBubble';
 import AIPanel from './ai-assistant/AIPanel';
 import AIStyles from './ai-assistant/AIStyles';
 import { Message, Recommendation } from './ai-assistant/AIAssistantTypes';
-
-// Define Web Speech API types
-interface Window {
-  SpeechRecognition: any;
-  webkitSpeechRecognition: any;
-}
+// Import types from our declaration file
+import type { SpeechRecognition, SpeechRecognitionEvent, SpeechRecognitionErrorEvent } from '../types/web-speech-api';
 
 const AIAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,10 +22,10 @@ const AIAssistant: React.FC = () => {
   // Initialize speech recognition
   useEffect(() => {
     // Check if browser supports speech recognition
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
     
-    if (SpeechRecognition) {
-      recognitionRef.current = new SpeechRecognition();
+    if (SpeechRecognitionAPI) {
+      recognitionRef.current = new SpeechRecognitionAPI();
       recognitionRef.current.continuous = false;
       recognitionRef.current.lang = 'zh-CN';
       recognitionRef.current.interimResults = false;
@@ -113,7 +109,7 @@ const AIAssistant: React.FC = () => {
       if (inputText.includes('住宿') || inputText.includes('酒店')) {
         setMessages(prev => [...prev, { 
           id: userMessageId + 1, 
-          text: "根据您的需求，我为您找到了赛事附近的优质酒店推荐：", 
+          text: "根据您的需求，我为您���到了赛事附近的优质酒店推荐：", 
           fromUser: false,
           recommendations: [
             {
