@@ -1,10 +1,11 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Event, Service, services } from '../data';
 import { Calendar, ChevronLeft, MapPin, Share2, Star, Users, Hotel, UtensilsCrossed, Car, Ticket, Clock } from 'lucide-react';
 import ServiceRecommendation from './ServiceRecommendation';
 import { toast } from '@/components/ui/use-toast';
 import { Card, CardContent } from '@/components/ui/card';
+import { useSearchParams } from 'react-router-dom';
 
 interface EventDetailProps {
   event: Event;
@@ -13,8 +14,9 @@ interface EventDetailProps {
 
 const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
   const eventServices = services[event.id] || [];
-  const [activeTab, setActiveTab] = useState<'details' | 'services' | 'planning'>('details');
-
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('detailTab') || 'details';
+  
   // Group services by type
   const groupedServices: Record<string, Service[]> = {};
   eventServices.forEach(service => {
@@ -45,6 +47,45 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
       description: "已为您创建赛事规划，可在'赛事规划'中查看",
     });
   };
+  
+  const handleTabChange = (tab: string) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('detailTab', tab);
+    setSearchParams(newParams);
+  };
+
+  // Load dynamic content based on event type
+  const [planData, setPlanData] = useState<any>(null);
+  
+  useEffect(() => {
+    // Dynamic content loading based on event type
+    // In a real app, this would be an API call
+    const mockPlanData = {
+      '马拉松': {
+        preparation: ['能量补给', '马拉松装备', '体能训练'],
+        eventDay: ['集合时间', '补给站', '完赛奖励']
+      },
+      '足球': {
+        preparation: ['门票购买', '交通规划', '观赛装备'],
+        eventDay: ['入场时间', '应援物资', '餐饮推荐']
+      },
+      '篮球': {
+        preparation: ['球馆信息', '比赛时间', '球队阵容'],
+        eventDay: ['现场活动', '明星球员', '赛后聚会']
+      }
+    };
+    
+    // Determine event type from title or category
+    const eventType = event.title.includes('马拉松') ? '马拉松' : 
+                      event.title.includes('足球') ? '足球' : 
+                      event.title.includes('篮球') ? '篮球' : '通用';
+    
+    // Set plan data based on event type or use default
+    setPlanData(mockPlanData[eventType as keyof typeof mockPlanData] || {
+      preparation: ['赛事准备', '交通规划', '装备准备'],
+      eventDay: ['赛事时间', '地点导航', '相关活动']
+    });
+  }, [event]);
 
   return (
     <div className="bg-white animate-fade-in">
@@ -107,24 +148,30 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
         </div>
       </div>
       
-      {/* Tab Navigation */}
-      <div className="border-b">
+      {/* Tab Navigation - Enhanced with active state tracking */}
+      <div className="border-b sticky top-0 bg-white z-10">
         <div className="flex">
           <button 
-            className={`px-4 py-3 text-sm font-medium ${activeTab === 'details' ? 'text-meituan-blue border-b-2 border-meituan-blue' : 'text-gray-500'}`}
-            onClick={() => setActiveTab('details')}
+            className={`px-4 py-3 text-sm font-medium transition-all ${activeTab === 'details' 
+              ? 'text-[#FFD256] border-b-2 border-[#FFD256]' 
+              : 'text-gray-500 hover:text-[#FFD256]/70'}`}
+            onClick={() => handleTabChange('details')}
           >
             赛事详情
           </button>
           <button 
-            className={`px-4 py-3 text-sm font-medium ${activeTab === 'services' ? 'text-meituan-blue border-b-2 border-meituan-blue' : 'text-gray-500'}`}
-            onClick={() => setActiveTab('services')}
+            className={`px-4 py-3 text-sm font-medium transition-all ${activeTab === 'services' 
+              ? 'text-[#FFD256] border-b-2 border-[#FFD256]' 
+              : 'text-gray-500 hover:text-[#FFD256]/70'}`}
+            onClick={() => handleTabChange('services')}
           >
             周边服务
           </button>
           <button 
-            className={`px-4 py-3 text-sm font-medium ${activeTab === 'planning' ? 'text-meituan-blue border-b-2 border-meituan-blue' : 'text-gray-500'}`}
-            onClick={() => setActiveTab('planning')}
+            className={`px-4 py-3 text-sm font-medium transition-all ${activeTab === 'planning' 
+              ? 'text-[#FFD256] border-b-2 border-[#FFD256]' 
+              : 'text-gray-500 hover:text-[#FFD256]/70'}`}
+            onClick={() => handleTabChange('planning')}
           >
             赛事规划
           </button>
@@ -152,7 +199,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
             
             <div className="mb-8">
               <div className="bg-meituan-gray rounded-xl p-5">
-                <h2 className="text-lg font-bold text-meituan-blue mb-3">赛事AI助手推荐</h2>
+                <h2 className="text-lg font-bold text-meituan-blue mb-3">嗨赛智荐 | 赛事助手推荐</h2>
                 <p className="text-gray-600 mb-4">
                   根据您的兴趣和历史行为，我们为您定制了以下服务方案，帮助您顺利参与这场赛事。
                 </p>
@@ -207,7 +254,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
                       <Clock className="h-5 w-5 text-meituan-blue" />
                     </div>
                     <div>
-                      <h3 className="text-meituan-blue font-medium mb-1">智能服务推荐</h3>
+                      <h3 className="text-meituan-blue font-medium mb-1">嗨赛智荐 | 智能服务推荐</h3>
                       <p className="text-sm text-gray-600">
                         根据赛事时间和您的位置，我们为您精选了高品质的周边服务，让您的赛事体验更便捷、舒适。
                       </p>
@@ -246,9 +293,9 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
                       <Calendar className="h-5 w-5 text-meituan-orange" />
                     </div>
                     <div>
-                      <h3 className="text-meituan-blue font-medium mb-1">赛事参与规划</h3>
+                      <h3 className="text-meituan-blue font-medium mb-1">嗨赛智荐 | 赛事参与规划</h3>
                       <p className="text-sm text-gray-600">
-                        根据您的偏好和赛事特点，我们可以为您制定个性化的赛事参与计划，包括行程安排、服务预订等。
+                        根据您的偏好和赛事特点，我们为您制定个性化的赛事参与计划，包括行程安排、服务预订等。
                       </p>
                     </div>
                   </div>
@@ -256,41 +303,40 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
               </Card>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border p-4 mb-4">
-              <h3 className="font-medium text-meituan-blue mb-3">赛前准备 (赛事前3天)</h3>
-              <div className="space-y-3">
-                <div className="flex items-center">
-                  <UtensilsCrossed className="h-4 w-4 text-meituan-orange mr-2" />
-                  <span className="text-sm">参赛者能量餐 - 提前预订</span>
+            {/* Dynamic plan content based on event type */}
+            {planData && (
+              <>
+                <div className="bg-white rounded-xl shadow-sm border p-4 mb-4">
+                  <h3 className="font-medium text-meituan-blue mb-3">赛前准备 (赛事前3天)</h3>
+                  <div className="space-y-3">
+                    {planData.preparation.map((item: string, index: number) => (
+                      <div key={index} className="flex items-center">
+                        <UtensilsCrossed className={`h-4 w-4 mr-2 ${
+                          index % 3 === 0 ? 'text-meituan-orange' :
+                          index % 3 === 1 ? 'text-meituan-blue' : 'text-green-500'
+                        }`} />
+                        <span className="text-sm">{item}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <Hotel className="h-4 w-4 text-meituan-blue mr-2" />
-                  <span className="text-sm">赛事酒店入住 - 赛前一天</span>
-                </div>
-                <div className="flex items-center">
-                  <Ticket className="h-4 w-4 text-green-500 mr-2" />
-                  <span className="text-sm">领取参赛物资 - 赛前一天</span>
-                </div>
-              </div>
-            </div>
 
-            <div className="bg-white rounded-xl shadow-sm border p-4 mb-4">
-              <h3 className="font-medium text-meituan-blue mb-3">赛事当天</h3>
-              <div className="space-y-3">
-                <div className="flex items-center">
-                  <Clock className="h-4 w-4 text-meituan-orange mr-2" />
-                  <span className="text-sm">早餐时间 - 6:00 AM</span>
+                <div className="bg-white rounded-xl shadow-sm border p-4 mb-6">
+                  <h3 className="font-medium text-meituan-blue mb-3">赛事当天</h3>
+                  <div className="space-y-3">
+                    {planData.eventDay.map((item: string, index: number) => (
+                      <div key={index} className="flex items-center">
+                        <Clock className={`h-4 w-4 mr-2 ${
+                          index % 3 === 0 ? 'text-meituan-orange' :
+                          index % 3 === 1 ? 'text-meituan-blue' : 'text-green-500'
+                        }`} />
+                        <span className="text-sm">{item}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <Car className="h-4 w-4 text-meituan-blue mr-2" />
-                  <span className="text-sm">接驳车服务 - 7:00 AM</span>
-                </div>
-                <div className="flex items-center">
-                  <MapPin className="h-4 w-4 text-red-500 mr-2" />
-                  <span className="text-sm">赛事开始时间 - 8:30 AM</span>
-                </div>
-              </div>
-            </div>
+              </>
+            )}
 
             <div className="bg-white rounded-xl shadow-sm border p-4 mb-6">
               <h3 className="font-medium text-meituan-blue mb-3">赛后服务</h3>
@@ -309,7 +355,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ event, onBack }) => {
             <div className="flex justify-center">
               <button 
                 onClick={handleCreatePlan}
-                className="bg-meituan-blue text-white px-6 py-3 rounded-lg shadow-md hover:bg-meituan-blue/90 transition"
+                className="bg-gradient-to-r from-[#FFD256] to-[#FFB838] text-white px-6 py-3 rounded-lg shadow-md hover:opacity-90 transition"
               >
                 为我创建个性化赛事规划
               </button>

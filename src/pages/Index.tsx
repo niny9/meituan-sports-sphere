@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -58,6 +57,12 @@ const Index = () => {
   };
 
   const handleEventClick = (event: Event) => {
+    // Save current scroll position before navigating to event detail
+    sessionStorage.setItem('scrollPosition', window.scrollY.toString());
+    sessionStorage.setItem('selectedCategory', selectedCategory || '');
+    sessionStorage.setItem('activeTab', activeTab);
+    
+    // Set the selected event and scroll to top
     setSelectedEvent(event);
     window.scrollTo(0, 0);
   };
@@ -72,11 +77,28 @@ const Index = () => {
     }
   };
 
-  // Handle "back to events" navigation
+  // Handle "back to events" navigation with state preservation
   const handleBackToEvents = () => {
     setSelectedEvent(null);
-    // Restore previous state if needed
+    
+    // Restore previous state
     const savedScrollPosition = sessionStorage.getItem('scrollPosition');
+    const savedCategory = sessionStorage.getItem('selectedCategory');
+    const savedTab = sessionStorage.getItem('activeTab');
+    
+    // Restore category if it was selected
+    if (savedCategory && savedCategory !== '') {
+      setSelectedCategory(savedCategory);
+    }
+    
+    // Restore active tab if needed
+    if (savedTab && savedTab !== activeTab) {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set('tab', savedTab);
+      setSearchParams(newParams);
+    }
+    
+    // Restore scroll position
     if (savedScrollPosition) {
       setTimeout(() => {
         window.scrollTo(0, parseInt(savedScrollPosition));

@@ -1,9 +1,10 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import EventCard from '../EventCard';
 import { Event } from '@/data/types';
 import { intentCategories } from '@/data';
 import { Card, CardContent } from "@/components/ui/card";
+import { ChevronRight } from 'lucide-react';
 
 interface EventsTabContentProps {
   selectedCategory: string | null;
@@ -20,11 +21,15 @@ const EventsTabContent: React.FC<EventsTabContentProps> = ({
   filteredEvents,
   handleEventClick
 }) => {
+  const [expanded, setExpanded] = useState(false);
+
   return (
     <>
       {/* User intent categories with improved visuals */}
       <section className="mb-8">
-        <h2 className="text-xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#FFD256] to-[#FFB838]">猜你想去</h2>
+        <h2 className="text-xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#FFD256] to-[#FFB838]">
+          🔥 嗨赛智荐｜你的专属赛事清单
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {intentCategories.map((category) => (
             <button
@@ -92,7 +97,7 @@ const EventsTabContent: React.FC<EventsTabContentProps> = ({
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredEvents.map(event => (
+            {filteredEvents.slice(0, expanded ? undefined : 6).map(event => (
               <EventCard 
                 key={event.id} 
                 event={event}
@@ -101,13 +106,34 @@ const EventsTabContent: React.FC<EventsTabContentProps> = ({
             ))}
           </div>
         )}
+        
+        {filteredEvents.length > 6 && !expanded && (
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => setExpanded(true)}
+              className="inline-flex items-center px-4 py-2 text-sm text-[#FFD256] hover:text-[#FFB838] transition-colors"
+            >
+              查看更多赛事 <ChevronRight className="h-4 w-4 ml-1" />
+            </button>
+          </div>
+        )}
       </section>
       
       {/* AI-driven personalized suggestions */}
-      {!selectedCategory && !searchQuery && filteredEvents.length > 0 && (
+      {!selectedCategory && !searchQuery && filteredEvents.length > 0 && !expanded && (
         <section className="mt-12">
           <div className="bg-gradient-to-r from-[#FFD256]/10 to-[#FFB838]/10 p-5 rounded-xl border border-[#FFD256]/20">
-            <h3 className="font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-[#FFD256] to-[#FFB838]">赛事智能匹配</h3>
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FFD256] to-[#FFB838]">
+                个性化赛事智能匹配
+              </h3>
+              <button 
+                className="text-sm text-[#FFD256] hover:text-[#FFB838] transition-colors flex items-center"
+                onClick={() => handleEventClick(filteredEvents[0])}
+              >
+                更多 <ChevronRight className="h-4 w-4 ml-1" />
+              </button>
+            </div>
             <p className="text-sm text-gray-600 mb-3">
               根据您的浏览习惯和兴趣，系统智能匹配以下赛事
             </p>

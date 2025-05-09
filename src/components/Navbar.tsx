@@ -21,6 +21,14 @@ const Navbar: React.FC = () => {
       newParams.set('search', searchQuery);
       newParams.set('tab', 'events'); // Always switch to events tab for search
       setSearchParams(newParams);
+      
+      // If on event detail page, navigate back to main page
+      if (window.location.pathname !== '/') {
+        navigate({
+          pathname: '/',
+          search: newParams.toString()
+        });
+      }
     }
   };
 
@@ -33,7 +41,21 @@ const Navbar: React.FC = () => {
       newParams.delete('search');
     }
     setSearchParams(newParams);
+    
+    // If on a different route, navigate back to homepage with tab parameter
+    if (window.location.pathname !== '/') {
+      navigate({
+        pathname: '/',
+        search: newParams.toString()
+      });
+    }
+    
     console.log("Navigation clicked:", menuId);
+  };
+
+  const handleLogoClick = () => {
+    // Clear all params and navigate to home
+    navigate('/');
   };
 
   return (
@@ -42,7 +64,10 @@ const Navbar: React.FC = () => {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <div className="mr-4 flex">
-              <span className="font-bold text-xl cursor-pointer" onClick={() => navigate('/')}>
+              <span 
+                className="font-bold text-xl cursor-pointer" 
+                onClick={handleLogoClick}
+              >
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FFD256] to-[#FFB838]">嗨赛智荐</span>
               </span>
             </div>
