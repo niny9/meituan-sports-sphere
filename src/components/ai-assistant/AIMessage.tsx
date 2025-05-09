@@ -1,85 +1,60 @@
 
 import React from 'react';
-import { Hotel, UtensilsCrossed, Car, MapPin, MessageSquare } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { toast } from '@/hooks/use-toast';
-
-interface Recommendation {
-  type: 'hotel' | 'restaurant' | 'transport' | 'ticket';
-  title: string;
-  description: string;
-}
+import { Avatar } from '@/components/ui/avatar';
+import AIStructuredResponse from './AIStructuredResponse';
 
 interface AIMessageProps {
   text: string;
   fromUser: boolean;
-  recommendations?: Recommendation[];
+  recommendations?: Array<{
+    type: 'hotel' | 'restaurant' | 'transport' | 'ticket' | 'event' | 'venue' | 'guide';
+    title: string;
+    description: string;
+    imageUrl?: string;
+    actionText?: string;
+    actionLink?: string;
+  }>;
   zoomLevel: number;
 }
 
-const AIMessage: React.FC<AIMessageProps> = ({ text, fromUser, recommendations, zoomLevel }) => {
-  // Get recommendation icon by type
-  const getRecommendationIcon = (type: string) => {
-    switch(type) {
-      case 'hotel':
-        return <Hotel className="h-4 w-4 text-blue-500" />;
-      case 'restaurant':
-        return <UtensilsCrossed className="h-4 w-4 text-amber-500" />;
-      case 'transport':
-        return <Car className="h-4 w-4 text-green-500" />;
-      case 'ticket':
-        return <MapPin className="h-4 w-4 text-purple-500" />;
-      default:
-        return <MessageSquare className="h-4 w-4" />;
-    }
+const AIMessage: React.FC<AIMessageProps> = ({ 
+  text, 
+  fromUser, 
+  recommendations = [],
+  zoomLevel
+}) => {
+  // Apply zoom level to text
+  const textStyle = {
+    fontSize: `${14 * zoomLevel}px`,
   };
-
+  
   return (
-    <div 
-      className={`mb-4 ${fromUser ? 'ml-auto' : 'mr-auto'} ${fromUser ? 'max-w-[90%]' : 'max-w-[95%]'}`}
-      style={{ transform: `scale(${zoomLevel})`, transformOrigin: fromUser ? 'right bottom' : 'left bottom', transition: 'transform 0.2s ease' }}
-    >
+    <div className={`flex ${fromUser ? 'justify-end' : 'justify-start'} mb-4`}>
+      {!fromUser && (
+        <Avatar className="w-8 h-8 mr-2 bg-meituan-orange text-white">
+          <span className="text-xs">AI</span>
+        </Avatar>
+      )}
+      
       <div 
-        className={`p-3 rounded-lg ${
+        className={`max-w-[75%] ${
           fromUser 
-            ? 'bg-meituan-blue text-white rounded-br-none' 
-            : 'bg-white text-gray-700 shadow-sm rounded-bl-none'
-        }`}
+            ? 'bg-meituan-blue text-white rounded-tl-lg rounded-tr-lg rounded-bl-lg' 
+            : 'bg-gray-100 text-gray-800 rounded-tl-lg rounded-tr-lg rounded-br-lg'
+        } px-3 py-2`}
       >
-        {text}
+        <p style={textStyle}>{text}</p>
         
-        {/* Show recommendations if available */}
-        {recommendations && (
-          <div className="mt-3 space-y-2">
-            {recommendations.map((rec, idx) => (
-              <Card key={idx} className="bg-white border-gray-200">
-                <CardContent className="p-3">
-                  <div className="flex items-center gap-2">
-                    {getRecommendationIcon(rec.type)}
-                    <div>
-                      <h5 className="text-sm font-medium text-meituan-blue">{rec.title}</h5>
-                      <p className="text-xs text-gray-500">{rec.description}</p>
-                    </div>
-                  </div>
-                  <div className="flex justify-end mt-2">
-                    <button 
-                      onClick={() => {
-                        toast({
-                          title: "查看详情",
-                          description: `正在跳转到${rec.title}详情页面`
-                        });
-                      }}
-                      className="text-xs text-meituan-blue hover:underline"
-                    >
-                      查看详情 →
-                    </button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+        {!fromUser && recommendations.length > 0 && (
+          <AIStructuredResponse recommendations={recommendations} />
         )}
       </div>
+      
+      {fromUser && (
+        <Avatar className="w-8 h-8 ml-2 bg-gray-400 text-white">
+          <span className="text-xs">您</span>
+        </Avatar>
+      )}
     </div>
   );
 };

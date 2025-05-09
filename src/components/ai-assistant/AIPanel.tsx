@@ -13,6 +13,8 @@ interface AIPanelProps {
   zoomLevel: number;
   onSendMessage: (message: string) => void;
   onSuggestionClick: (suggestion: string) => void;
+  isListening?: boolean;
+  onVoiceToggle?: () => void;
   zoomIn: () => void;
   zoomOut: () => void;
   toggleExpanded: () => void;
@@ -25,6 +27,8 @@ const AIPanel: React.FC<AIPanelProps> = ({
   zoomLevel,
   onSendMessage,
   onSuggestionClick,
+  isListening,
+  onVoiceToggle,
   zoomIn,
   zoomOut,
   toggleExpanded,
@@ -56,7 +60,11 @@ const AIPanel: React.FC<AIPanelProps> = ({
       
       <div className="p-3 border-t">
         <AISuggestions onSuggestionClick={onSuggestionClick} />
-        <AIMessageInput onSendMessage={onSendMessage} />
+        <AIMessageInput 
+          onSendMessage={onSendMessage} 
+          isListening={isListening}
+          onVoiceToggle={onVoiceToggle}
+        />
       </div>
     </div>
   );
