@@ -19,34 +19,31 @@ const EnhancedEventCard: React.FC<EnhancedEventCardProps> = ({ event, onClick })
   const hasGoodContrast = checkTailwindContrast('text-gray-500', 'bg-white');
 
   return (
-    <div className="enhanced-card-wrapper relative">
+    <div className="enhanced-card-wrapper relative group">
       {/* 使用原始EventCard组件 */}
-      <EventCard event={event} onClick={() => onClick(event)} />
+      <div className="event-card-container">
+        <EventCard event={event} onClick={() => onClick(event)} />
+      </div>
       
       {/* 优先展示的报名截止信息覆盖层 */}
       {event.date && (
         <div className="absolute top-2 right-2 z-10">
-          <span className="event-deadline bg-white/90 px-2 py-1 rounded-md shadow-sm">
+          <span className="event-deadline bg-white/90 px-2 py-1 rounded-md shadow-sm group-hover:bg-amber-50/95 group-hover:-translate-y-0.5 transition-all duration-200">
             截止: {new Date(event.date).toLocaleDateString('zh-CN')}
           </span>
         </div>
       )}
       
-      {/* 降低热度值的视觉冲击 */}
-      <style jsx>{`
-        /* 使用全局定义的类来修改视觉优先级 */
-        .enhanced-card-wrapper :global(.event-popularity) {
-          opacity: 0.7;
-          font-size: 0.85rem;
-        }
-        
-        /* 当卡片被悬停时，提升截止日期的可见性 */
-        .enhanced-card-wrapper:hover .event-deadline {
-          background-color: rgba(255, 236, 217, 0.95);
-          transform: translateY(-2px);
-          transition: all 0.2s ease;
-        }
-      `}</style>
+      {/* 添加全局样式到组件上，而不是使用styled-jsx */}
+      <style>
+        {`
+          /* 使用全局选择器来修改视觉优先级 */
+          .enhanced-card-wrapper .event-popularity {
+            opacity: 0.7;
+            font-size: 0.85rem;
+          }
+        `}
+      </style>
     </div>
   );
 };
