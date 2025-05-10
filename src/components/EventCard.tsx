@@ -1,9 +1,7 @@
-
 import React from 'react';
-import { Calendar, MapPin } from 'lucide-react';
-import { Event } from '../data';
-import { formatDistance } from 'date-fns';
-import { zhCN } from 'date-fns/locale';
+import { Event } from '@/data';
+import { Star, MapPin, Calendar, Tag } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 interface EventCardProps {
   event: Event;
@@ -11,70 +9,86 @@ interface EventCardProps {
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
-  const eventDate = new Date(event.date);
-  const today = new Date();
-  const timeUntil = formatDistance(eventDate, today, { addSuffix: true, locale: zhCN });
-
-  // Determine intent level badge
-  const getIntentBadge = () => {
-    if (event.intentScore > 75) {
-      return <span className="absolute top-3 right-3 px-2 py-1 text-xs font-medium rounded-full bg-meituan-success text-white">强匹配</span>;
-    } else if (event.intentScore > 50) {
-      return <span className="absolute top-3 right-3 px-2 py-1 text-xs font-medium rounded-full bg-meituan-warning text-meituan-darkGray">中等匹配</span>;
-    }
-    return null;
+  // Format date to be more readable
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('zh-CN', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
   };
 
   return (
     <div 
-      className="event-card cursor-pointer bg-white"
+      className="event-card bg-white cursor-pointer"
       onClick={() => onClick(event)}
     >
       <div className="relative">
         <img 
           src={event.image} 
           alt={event.title} 
-          className="w-full h-48 object-cover"
+          className="w-full h-40 object-cover"
         />
-        {getIntentBadge()}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-meituan-blue/80 to-transparent px-4 py-3 text-white">
-          <h3 className="text-lg font-bold truncate">{event.title}</h3>
+        
+        {/* Intent score badge */}
+        <div className="absolute top-2 left-2">
+          <Badge 
+            className={`
+              ${event.intentScore > 75 ? 'intent-high' : 
+                event.intentScore > 50 ? 'intent-medium' : 
+                'intent-low'}
+            `}
+          >
+            匹配度 {event.intentScore}%
+          </Badge>
         </div>
+        
+        {/* Tags */}
+        {event.tags && event.tags.length > 0 && (
+          <div className="absolute bottom-2 left-2 flex flex-wrap gap-1">
+            {event.tags.map((tag, index) => (
+              <span 
+                key={index}
+                className="bg-black/50 text-white text-xs px-2 py-0.5 rounded"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="bg-meituan-gray text-meituan-blue px-2 py-1 rounded-full text-xs">
+      
+      <div className="p-3">
+        <h3 className="font-bold text-meituan-blue mb-1 line-clamp-1">{event.title}</h3>
+        
+        <div className="flex items-center text-xs text-gray-500 mb-2">
+          <Calendar className="h-3 w-3 mr-1" />
+          <span>{formatDate(event.date)}</span>
+          
+          <span className="mx-2">•</span>
+          
+          <div className="flex items-center event-popularity">
+            <Star className="h-3 w-3 mr-1 text-yellow-500" />
+            <span>{event.popularity}%</span>
+          </div>
+        </div>
+        
+        <div className="flex items-center text-xs text-gray-500">
+          <MapPin className="h-3 w-3 mr-1" />
+          <span className="line-clamp-1">{event.location}</span>
+        </div>
+        
+        {/* Event deadline - higher visual priority */}
+        <div className="mt-2 pt-2 border-t border-gray-100 flex justify-between items-center">
+          <span className="text-xs text-gray-500 flex items-center">
+            <Tag className="h-3 w-3 mr-1" />
             {event.category}
           </span>
-          <div className="text-sm font-medium text-meituan-orange">
-            {timeUntil}
-          </div>
-        </div>
-        
-        <div className="flex flex-col space-y-2 text-sm text-gray-600">
-          <div className="flex items-center">
-            <Calendar className="h-4 w-4 mr-1 text-meituan-blue" />
-            <span>{new Date(event.date).toLocaleDateString('zh-CN')}</span>
-          </div>
-          <div className="flex items-center">
-            <MapPin className="h-4 w-4 mr-1 text-meituan-blue" />
-            <span className="truncate">{event.location}</span>
-          </div>
-        </div>
-        
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="inline-block h-8 w-8 rounded-full overflow-hidden bg-gray-100">
-              <div className="h-full w-full flex items-center justify-center bg-meituan-blue/10 text-meituan-blue text-xs">
-                {Math.floor(event.popularity / 10)}
-              </div>
-            </span>
-            <span className="text-sm text-gray-500">热度</span>
-          </div>
           
-          <button className="px-3 py-1.5 rounded-md bg-meituan-orange text-white text-sm hover:bg-opacity-90 transition">
-            了解详情
-          </button>
+          <span className="event-deadline text-xs">
+            报名截止: {formatDate(event.date)}
+          </span>
         </div>
       </div>
     </div>

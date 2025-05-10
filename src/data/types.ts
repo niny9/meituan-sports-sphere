@@ -29,6 +29,8 @@ export interface Service {
   availability?: string;
   features?: string[];
   discount?: string;
+  region?: string;
+  regionFeatures?: string[];
 }
 
 export interface IntentCategory {

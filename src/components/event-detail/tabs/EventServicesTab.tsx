@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { Service, services } from '@/data';
-import { Clock, UtensilsCrossed, Hotel, Car, Ticket } from 'lucide-react';
-import ServiceRecommendation from '@/components/ServiceRecommendation';
+import { Clock, UtensilsCrossed, Hotel, Car, Ticket, MapPin } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import RegionalServiceRecommendation from '@/components/RegionalServiceRecommendation';
 
 interface EventServicesTabProps {
   eventId: string;
@@ -29,6 +29,11 @@ const EventServicesTab: React.FC<EventServicesTabProps> = ({ eventId }) => {
     entertainment: { name: '娱乐活动', icon: <Ticket className="h-5 w-5" /> }
   };
 
+  // 获取当前事件的地域信息
+  const region = eventServices.length > 0 && eventServices[0].region 
+    ? eventServices[0].region 
+    : null;
+
   return (
     <>
       <div className="mb-6">
@@ -43,6 +48,14 @@ const EventServicesTab: React.FC<EventServicesTabProps> = ({ eventId }) => {
                 <p className="text-sm text-gray-600">
                   根据赛事时间和您的位置，我们为您精选了高品质的周边服务，让您的赛事体验更便捷、舒适。
                 </p>
+                
+                {/* 显示地域信息 */}
+                {region && (
+                  <div className="flex items-center mt-2 text-xs text-meituan-orange">
+                    <MapPin className="h-3 w-3 mr-1" /> 
+                    <span>当前展示 {region} 地区特色服务</span>
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>
@@ -60,7 +73,7 @@ const EventServicesTab: React.FC<EventServicesTabProps> = ({ eventId }) => {
           </div>
           <div className="grid grid-cols-1 gap-4">
             {serviceList.map(service => (
-              <ServiceRecommendation key={service.id} service={service} />
+              <RegionalServiceRecommendation key={service.id} service={service} />
             ))}
           </div>
         </section>

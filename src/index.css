@@ -125,4 +125,33 @@
   .intent-low {
     @apply bg-meituan-gray text-meituan-darkGray;
   }
+  
+  /* 当AI助手浮窗打开时的样式调整 */
+  body:has(.ai-assistant-panel) {
+    @apply overflow-hidden;
+  }
+
+  body:has(.ai-assistant-panel) .container > *:not(.ai-assistant-bubble-container) {
+    @apply opacity-90 pointer-events-none;
+  }
+
+  /* 视觉权重调整 - 降低热度值的视觉冲击力 */
+  .event-popularity {
+    @apply text-sm text-gray-500;
+  }
+  
+  /* 提高报名截止日期的视觉优先级 */
+  .event-deadline {
+    @apply text-sm font-medium text-red-500;
+  }
 }
+
+/* 色彩对比度辅助类 */
+.high-contrast-text {
+  @apply text-meituan-blue;
+}
+
+.contrast-warning {
+  @apply border-l-4 border-yellow-400 pl-2;
+}
+
