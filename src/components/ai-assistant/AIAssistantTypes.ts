@@ -6,6 +6,7 @@ export interface Recommendation {
   imageUrl?: string;
   actionText?: string;
   actionLink?: string;
+  id?: string;
 }
 
 export interface Message {

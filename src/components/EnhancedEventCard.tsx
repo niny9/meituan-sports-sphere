@@ -19,7 +19,10 @@ const EnhancedEventCard: React.FC<EnhancedEventCardProps> = ({ event, onClick })
   const hasGoodContrast = checkTailwindContrast('text-gray-500', 'bg-white');
 
   return (
-    <div className="enhanced-card-wrapper relative group">
+    <div 
+      className="enhanced-card-wrapper relative group hover:transform hover:translate-y-[-5px] transition-all duration-200 hover:shadow-lg rounded-lg overflow-hidden cursor-pointer"
+      onClick={() => onClick(event)}
+    >
       {/* 使用原始EventCard组件 */}
       <div className="event-card-container">
         <EventCard event={event} onClick={() => onClick(event)} />
@@ -34,16 +37,16 @@ const EnhancedEventCard: React.FC<EnhancedEventCardProps> = ({ event, onClick })
         </div>
       )}
       
-      {/* 添加全局样式到组件上，而不是使用styled-jsx */}
-      <style>
-        {`
+      {/* 添加全局样式到组件上 */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
           /* 使用全局选择器来修改视觉优先级 */
           .enhanced-card-wrapper .event-popularity {
             opacity: 0.7;
             font-size: 0.85rem;
           }
-        `}
-      </style>
+        `
+      }} />
     </div>
   );
 };
