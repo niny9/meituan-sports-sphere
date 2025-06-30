@@ -1,73 +1,32 @@
-# Welcome to your Lovable project
+# 嗨赛智荐｜AI 体育赛事消费智能推荐系统
 
-## Project info
+一个探索性构建的智能推荐系统，旨在结合大语言模型（LLM）、用户画像建模和意图识别 Agent，为体育赛事类平台提供更具针对性的内容推荐体验。
 
-**URL**: https://lovable.dev/projects/d7d6b9d4-a39b-45cc-85aa-e2ca96cf84dc
+该项目仍处于原型阶段，重点在于验证 AI 能力在内容分发流程中的可行性与集成思路，欢迎参考、讨论与共建。
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🧩 项目简介
 
-**Use Lovable**
+**嗨赛智荐** 聚焦体育内容消费场景，尝试结合自然语言处理技术与用户行为建模方法，为用户提供基于语义理解与兴趣特征的推荐服务。
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d7d6b9d4-a39b-45cc-85aa-e2ca96cf84dc) and start prompting.
+本项目主要围绕以下核心问题展开：
 
-Changes made via Lovable will be committed automatically to this repo.
+- 用户的真实意图如何通过对话识别？
+- 多轮上下文如何影响推荐召回逻辑？
+- 如何通过行为数据构建更丰富的用户画像？
+- 如何将 LLM 能力整合进推荐主链路中？
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🔧 项目结构概览
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/d7d6b9d4-a39b-45cc-85aa-e2ca96cf84dc) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+```bash
+嗨赛智荐/
+├── data/               # 模拟数据样本与清洗脚本
+├── model/              # 推荐与意图识别的初步实现逻辑
+├── agent/              # 多轮对话与语义解析 Agent
+├── recommend/          # 推荐策略模块（内容召回与排序）
+├── prototype/          # 产品原型图与交互流程（静态资源）
+├── docs/               # 产品设计说明与调研材料
+└── README.md
